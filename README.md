@@ -1,5 +1,5 @@
 # jsErrorReport
-> Use `window.onerror` to catch error include `XMLHttpRequest` and `fetch` request.
+> Use `window.onerror` to catch errors, including `XMLHttpRequest` and `fetch` requests.
 
 # Use
 ```javascript
