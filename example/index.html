@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <button onclick="message()">测试</button>
+    <script src="./error-log-report.js"></script>
+    <script>
+        function message() {
+            console.log(addd)
+        }
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange = function (e) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log('success')
+            }
+
+        }
+
+
+        xhr.open("POST", '/f', true);
+        xhr.send(null)
+
+        fetch('f').then(function(res){
+            console.log(res)
+        })
+    </script>
+</body>
+
+</html>
