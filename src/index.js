@@ -8,7 +8,7 @@
 (function () {
     window.onerror = sendLog
 
-    var url = ''
+    var url = window.errorReportUrl || ''
 
     function sendLog(error, file, row, col, msg) {
         if (typeof msg === 'object') msg = msg.stack
