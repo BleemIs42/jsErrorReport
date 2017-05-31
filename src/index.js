@@ -19,7 +19,7 @@
             msg: msg,
             ua: navigator.userAgent
         }
-        console.log(log)
+        console.log('log: ', log)
 
         var img = new Image()
         img.src = url + '?' + parseParams(log)
@@ -47,8 +47,8 @@
         }
         if (/(y+)/.test(fmt))
             fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length))
-        for (var k in o){
-            if (new RegExp("(" + k + ")").test(fmt)){
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(fmt)) {
                 fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k])
                     .length)))
             }
@@ -56,9 +56,10 @@
         return fmt
     }
 
-    (function (xhrproto) {
+    (function () {
+        var oXHRproto = XMLHttpRequest.prototype
         var postData
-        var open = xhrproto.open
+        var open = oXHRproto.open
         XMLHttpRequest.prototype.open = function (method, url, async, user, pass) {
             this.addEventListener("readystatechange", function () {
                 if (this.readyState == 2 && this.status >= 400) {
@@ -66,23 +67,23 @@
                     sendLog(null, null, null, null, msg)
                 }
             }, false)
-            this.addEventListener('error', function(e){
+            this.addEventListener('error', function (e) {
                 console.log(e)
             })
 
             open.call(this, method, url, async, user, pass)
         }
 
-        var send = xhrproto.send
+        var send = oXHRproto.send
         XMLHttpRequest.prototype.send = function (data) {
             postData = data
             send.call(this, data)
         }
 
-        var originFetch = fetch
-        fetch = function () {
+        var oFetch = fetch
+        window.fetch = function () {
             var args = [].slice.call(arguments)
-            return originFetch.apply(this, args).then(function (res) {
+            return oFetch.apply(this, args).then(function (res) {
                 if (res.status >= 400) {
                     var data = args[1] ? args[1].body : null
                     var method = args[1] ? args[1].method : 'GET'
@@ -93,5 +94,15 @@
             })
         }
 
-    })(XMLHttpRequest.prototype)
+        var oPromise = Promise
+        window.Promise = function (fn) {
+            var promise = new oPromise(fn)
+            return promise.then(function (res) {
+                    return res
+                }, function(err){
+                    if(typeof err == 'object' ) err = err.stack
+                    sendLog(null, null, null, null, err)
+                })
+        }
+    })()
 })()

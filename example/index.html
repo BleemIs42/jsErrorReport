@@ -23,11 +23,15 @@
         }
 
 
-        xhr.open("POST", '/f', true);
+        xhr.open("POST", '/error', true);
         xhr.send(null)
 
-        fetch('f').then(function(res){
+        fetch('/error').then(function(res){
             console.log(res)
+        })
+
+        var p = new Promise(function(resolve, reject){
+            reject('error')
         })
     </script>
 </body>
